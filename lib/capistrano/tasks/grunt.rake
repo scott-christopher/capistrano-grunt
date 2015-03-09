@@ -14,14 +14,16 @@ DESC
 task :grunt do
   on roles fetch(:grunt_roles) do
     within fetch(:grunt_target_path, release_path) do
-      options = [
-        fetch(:grunt_flags)
-      ]
+      with fetch(:grunt_env) do
+        options = [
+          fetch(:grunt_flags)
+        ]
 
-      options << "--gruntfile #{fetch(:grunt_file)}" if fetch(:grunt_file)
-      options << fetch(:grunt_tasks) if fetch(:grunt_tasks)
+        options << "--gruntfile #{fetch(:grunt_file)}" if fetch(:grunt_file)
+        options << fetch(:grunt_tasks) if fetch(:grunt_tasks)
 
-      execute :grunt, options
+        execute :grunt, options
+      end
     end
   end
 end
@@ -36,5 +38,6 @@ namespace :load do
     set :grunt_tasks, nil
     set :grunt_flags, '--no-color'
     set :grunt_roles, :all
+    set :grunt_env, {}
   end
 end
